@@ -1,0 +1,92 @@
+version: "3.9"
+services:
+  
+  discovery-service:
+    image: discovery-service
+    ports:
+      - 8761:8761
+  
+  api-gateway:
+    image: api-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=default,eureka
+      - EUREKA_HOST=discovery-service
+      - EUREKA_PORT=8761
+    ports:
+      - 8765:8765
+
+  service-a:
+    image: kambei/service-a:1.0.0-SNAPSHOT
+
+  service-b:
+    image: kambei/service-b:1.0.0-SNAPSHOT
+
+  ##--------------------------MONITORING-------------------------------------------##
+  prometheus-rsocket-proxy:
+    image: micrometermetrics/prometheus-rsocket-proxy
+    container_name: prometheus-rsocket-proxy
+    expose:
+      - '9096'
+      - '7001'
+      - '8086'
+    # ports:
+    #   - '9096:9096'
+    #   - '7001:7001'
+    #   - '8086:8086'
+    environment:
+      - server.port=9096
+      - micrometer.prometheus-proxy.websocket-port=8086
+      - micrometer.prometheus-proxy.tcp-port=7001
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+       - ${PROMETHEUS_EXTERNAL_PORT:-19090}:9090
+    volumes:
+      - ./tracing/prometheus/prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml:cached
+    depends_on:
+      - prometheus-rsocket-proxy
+
+  promtail:
+    image: grafana/promtail
+    volumes:
+      - ${LOG_MOUNT_PATH:-./log}:/var/log
+      - ./tracing/promtail/:/mnt/config
+    command: -config.file=/mnt/config/promtail-config.yaml
+
+  loki:
+    image: grafana/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./tracing/loki:/etc/loki:cached
+    depends_on:
+      - promtail
+
+  tempo:
+    image: grafana/tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tracing/tempo/tempo-local.yaml:/etc/tempo.yaml:cached
+      # - ./tempo-data/:/tmp/tempo
+    # ports:
+    #   - "14268"  # jaeger ingest
+    #   - "3200"   # tempo
+    #   - "55680"  # otlp grpc
+    #   - "55681"  # otlp http
+    #   - "9411"   # zipkin
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - ./tracing/grafana/datasource-config/:/etc/grafana/provisioning/datasources:cached
+      - ./tracing/grafana/dashboards-config/:/etc/grafana/provisioning/dashboards:cached
+    ports:
+      - ${GRAFANA_EXTERNAL_PORT:-13000}:3000
+    # environment:
+    #   - GF_AUTH_ANONYMOUS_ENABLED=true
+    #   - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    #   - GF_AUTH_DISABLE_LOGIN_FORM=true
+    depends_on:
+      - prometheus
+      - loki
+      - tempo

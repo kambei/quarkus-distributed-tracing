@@ -64,6 +64,16 @@ logging:
       max-history: 1
       clean-history-on-start: true
 
+
+# ACTUATORS
+management.endpoints.jmx.exposure.exclude:
+management.endpoints.jmx.exposure.include: info,health,env,loggers,metrics,prometheus
+management.endpoints.web.exposure.exclude:
+management.endpoints.web.exposure.include: info,health,env,loggers,metrics,prometheus
+management.endpoint.info.enabled: true
+management.endpoint.loggers.enabled: true
+
+
 # METRICS
 management:
   metrics:
