@@ -89,3 +89,20 @@ management.metrics.export.prometheus.rsocket:
 
 # TRACING
 spring.zipkin.enabled: false
+
+
+# Swagger
+springdoc:
+  enable-native-support: true
+  api-docs:
+    groups:
+      enabled: true
+    enabled: true
+  swagger-ui:
+    config-url: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+    urls:
+      - url: /service-a/v3/api-docs
+        name: Service A
+      - url: /service-b/v3/api-docs
+        name: Service B
