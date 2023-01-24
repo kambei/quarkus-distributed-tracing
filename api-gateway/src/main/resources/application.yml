@@ -1,0 +1,81 @@
+server:
+  port: 8765
+
+spring.cloud.gateway.globalcors.add-to-simple-url-handler-mapping: true
+
+spring:
+  application:
+    name: api-gateway
+
+  # CORS
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+
+#      default-filters:
+#        - TokenRelay
+#        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+      discovery:
+        locator:
+          lower-case-service-id: true
+          enabled: true
+
+      # ROUTES!!!
+      routes:
+        - id: service-a
+          uri: lb://service-a
+          predicates:
+            - Path=/service-a/**
+          filters:
+            - RewritePath=/service-a(?<path>.*), /$\{path}
+        - id: service-b
+          uri: lb://service-b
+          predicates:
+            - Path=/service-b/**
+          filters:
+            - RewritePath=/service-b(?<path>.*), /$\{path}
+        - id: test
+          uri: lb://service-a
+          predicates:
+            - Path=/test/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_HOST}:${EUREKA_PORT}/eureka
+
+# Logging
+logging.file.name: /var/log/${spring.application.name}.log
+logging:
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 1
+      clean-history-on-start: true
+
+# METRICS
+management:
+  metrics:
+    tags:
+      application: api-gateway
+management.metrics.export.prometheus.enabled: true
+management.metrics.export.prometheus.rsocket:
+  host: prometheus-rsocket-proxy #required
+  port: 7001
+  max-retries: 10000 # default is Long.MAX_VALUE
+  first-backoff: 10s
+  max-backoff: 10m
+
+# TRACING
+spring.zipkin.enabled: false

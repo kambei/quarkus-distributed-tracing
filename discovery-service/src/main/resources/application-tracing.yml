@@ -1,0 +1,5 @@
+# TRACING
+spring.zipkin.base-url: http://tempo:9411/
+spring.sleuth.propagation.type: B3,W3C
+spring.sleuth.opentracing.enabled: true
+spring.sleuth.sampler.probability: 1
