@@ -24,6 +24,9 @@ dependencies {
 
     implementation("io.quarkus:quarkus-rest-client")
     implementation("io.quarkus:quarkus-rest-client-jackson")
+
+//    implementation("io.quarkus:quarkus-opentelemetry")
+    implementation("io.jaegertracing:jaeger-zipkin")
 }
 
 group 'dev.kambei'

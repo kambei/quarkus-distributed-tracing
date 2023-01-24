@@ -25,9 +25,8 @@ dependencies {
   	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation group: 'io.micrometer.prometheus', name: 'prometheus-rsocket-spring', version: '1.3.0'
 
-//	// TRACING
-//	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-//	implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin'
+	// TRACING
+	implementation 'io.micrometer:micrometer-tracing:latest.integration'
 }
 
 dependencyManagement {

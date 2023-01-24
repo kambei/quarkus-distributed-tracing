@@ -5,7 +5,9 @@ services:
     image: discovery-service
     ports:
       - 8761:8761
-  
+    volumes:
+      - ./log:/var/log
+
   api-gateway:
     image: api-gateway
     environment:
@@ -14,12 +16,20 @@ services:
       - EUREKA_PORT=8761
     ports:
       - 8765:8765
+    volumes:
+      - ./log:/var/log
 
   service-a:
     image: kambei/service-a:1.0.0-SNAPSHOT
+    volumes:
+      - ./log:/var/log
+    user: root
 
   service-b:
     image: kambei/service-b:1.0.0-SNAPSHOT
+    volumes:
+      - ./log:/var/log
+    user: root
 
   ##--------------------------MONITORING-------------------------------------------##
   prometheus-rsocket-proxy:
