@@ -11,6 +11,7 @@ sourceCompatibility = '17'
 repositories {
 	mavenCentral()
 	maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
+	maven { url 'https://repo.spring.io/snapshot' }
 }
 
 ext {
@@ -33,6 +34,7 @@ dependencies {
 
 	// TRACING
 	implementation 'io.micrometer:micrometer-tracing:latest.integration'
+	implementation 'io.micrometer:micrometer-registry-otlp'
 }
 
 dependencyManagement {

@@ -46,7 +46,7 @@ spring:
           filters:
             - RewritePath=/service-b(?<path>.*), /$\{path}
         - id: test
-          uri: lb://service-a
+          uri: http://localhost:8080
           predicates:
             - Path=/test/**
 
@@ -63,7 +63,6 @@ logging:
       max-file-size: 10MB
       max-history: 1
       clean-history-on-start: true
-logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 
 # ACTUATORS
@@ -80,7 +79,15 @@ management:
   metrics:
     tags:
       application: api-gateway
-management.metrics.export.prometheus.enabled: true
+  otlp:
+    metrics:
+      export:
+        url: http://127.0.0.1:4317
+        enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 management.metrics.export.prometheus.rsocket:
   host: prometheus-rsocket-proxy #required
   port: 7001
@@ -104,3 +111,9 @@ springdoc:
         name: Service A
       - url: /service-b/v3/api-docs
         name: Service B
+
+
+# Tracing
+otlp:
+  exporter:
+    endpoint: http://localhost:4317
