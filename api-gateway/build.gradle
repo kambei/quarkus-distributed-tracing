@@ -11,7 +11,6 @@ sourceCompatibility = '17'
 repositories {
 	mavenCentral()
 	maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
-	maven { url 'https://repo.spring.io/snapshot' }
 }
 
 ext {
