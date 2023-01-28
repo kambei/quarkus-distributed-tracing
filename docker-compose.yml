@@ -1,35 +1,51 @@
 version: "3.9"
 services:
   
-  # discovery-service:
-  #   image: discovery-service
-  #   ports:
-  #     - 8761:8761
-  #   volumes:
-  #     - ./log:/var/log
+   discovery-service:
+     image: discovery-service
+     ports:
+       - 8761:8761
+     volumes:
+       - ./log:/var/log
 
-  # api-gateway:
-  #   image: api-gateway
-  #   environment:
-  #     - SPRING_PROFILES_ACTIVE=default,eureka
-  #     - EUREKA_HOST=discovery-service
-  #     - EUREKA_PORT=8761
-  #   ports:
-  #     - 8765:8765
-  #   volumes:
-  #     - ./log:/var/log
+   api-gateway:
+     image: api-gateway
+     environment:
+       - SPRING_PROFILES_ACTIVE=default,eureka
+       - EUREKA_HOST=discovery-service
+       - EUREKA_PORT=8761
+       # OpenTelemetry
+       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+       - OTEL_TRACES_EXPORTER=otlp
+       - OTEL_METRICS_EXPORTER=none
+       - OTEL_LOGS_EXPORTER=none
+       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+       - OTEL_SERVICE_NAME=api-gateway
+     ports:
+       - 8765:8765
+     volumes:
+       - ./log:/var/log
+     depends_on:
+      - discovery-service
+      - otel-collector
 
-  # service-a:
-  #   image: kambei/service-a:1.0.0-SNAPSHOT
-  #   volumes:
-  #     - ./log:/var/log
-  #   user: root
+   service-a:
+     image: kambei/service-a:1.0.0-SNAPSHOT
+     volumes:
+       - ./log:/var/log
+     user: root
+     depends_on:
+       - discovery-service
+       - otel-collector
 
-  # service-b:
-  #   image: kambei/service-b:1.0.0-SNAPSHOT
-  #   volumes:
-  #     - ./log:/var/log
-  #   user: root
+   service-b:
+     image: kambei/service-b:1.0.0-SNAPSHOT
+     volumes:
+       - ./log:/var/log
+     user: root
+     depends_on:
+       - discovery-service
+       - otel-collector
 
    ##--------------------------MONITORING-------------------------------------------##
    prometheus-rsocket-proxy:
@@ -81,7 +97,7 @@ services:
        - "1888:1888"   # pprof extension
        - "13133:13133" # health_check extension
        - "4317:4317"        # OTLP gRPC receiver
-       - "55670:55679" # zpages extension
+       - "55679:55679" # zpages extension
      depends_on:
        - tempo
 
@@ -95,7 +111,7 @@ services:
        - "14268"      # jaeger ingest, Jaeger - Thrift HTTP
        - "14250"      # Jaeger - GRPC
        - "55680"      # OpenTelemetry
-       - "3100"       # tempo
+       - "3200"       # tempo
        - "6831/udp"   # Jaeger - Thrift Compact
        - "6832/udp"   # Jaeger - Thrift Binary
 

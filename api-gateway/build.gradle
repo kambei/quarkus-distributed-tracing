@@ -30,9 +30,6 @@ dependencies {
 	// Metrics and Logs
   	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation group: 'io.micrometer.prometheus', name: 'prometheus-rsocket-spring', version: '1.3.0'
-
-	// TRACING
-	// TODO
 }
 
 dependencyManagement {

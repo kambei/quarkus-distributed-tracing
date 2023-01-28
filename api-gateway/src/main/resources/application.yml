@@ -111,8 +111,3 @@ springdoc:
         name: Service A
       - url: /service-b/v3/api-docs
         name: Service B
-
-
-# Tracing
-## TODO
-
