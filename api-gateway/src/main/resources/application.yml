@@ -46,7 +46,7 @@ spring:
           filters:
             - RewritePath=/service-b(?<path>.*), /$\{path}
         - id: test
-          uri: http://localhost:8080
+          uri: lb://service-a
           predicates:
             - Path=/test/**
 
@@ -63,6 +63,8 @@ logging:
       max-file-size: 10MB
       max-history: 1
       clean-history-on-start: true
+  pattern:
+    console:
 
 
 # ACTUATORS
