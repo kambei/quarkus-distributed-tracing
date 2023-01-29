@@ -23,4 +23,9 @@ Run `docker-compose up -d` to start all containers.
 - API Gateway: http://localhost:8765
 - Swagger: http://localhost:8765/swagger-ui.html
 
+
 - Endpoint test: http://localhost:8765/test
+
+
+- Prometheus: http://localhost:19090
+- Grafana: http://localhost:13000
