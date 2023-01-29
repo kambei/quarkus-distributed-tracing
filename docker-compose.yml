@@ -93,11 +93,11 @@ services:
      command: [ "--config=/etc/otel-collector-config.yaml" ]
      volumes:
        - ./tracing/otel/otel-config.yml:/etc/otel-collector-config.yaml
-     ports:
-       - "1888:1888"   # pprof extension
-       - "13133:13133" # health_check extension
-       - "4317:4317"        # OTLP gRPC receiver
-       - "55679:55679" # zpages extension
+#     ports:
+#       - "1888:1888"   # pprof extension
+#       - "13133:13133" # health_check extension
+#       - "4317:4317"        # OTLP gRPC receiver
+#       - "55679:55679" # zpages extension
      depends_on:
        - tempo
 
@@ -107,13 +107,13 @@ services:
      volumes:
        - ./tracing/tempo/tempo-local.yaml:/etc/tempo.yaml:cached
        # - ./tempo-data/:/tmp/tempo
-     ports:
-       - "14268"      # jaeger ingest, Jaeger - Thrift HTTP
-       - "14250"      # Jaeger - GRPC
-       - "55680"      # OpenTelemetry
-       - "3200"       # tempo
-       - "6831/udp"   # Jaeger - Thrift Compact
-       - "6832/udp"   # Jaeger - Thrift Binary
+#     ports:
+#       - "14268"      # jaeger ingest, Jaeger - Thrift HTTP
+#       - "14250"      # Jaeger - GRPC
+#       - "55680"      # OpenTelemetry
+#       - "3200"       # tempo
+#       - "6831/udp"   # Jaeger - Thrift Compact
+#       - "6832/udp"   # Jaeger - Thrift Binary
 
    grafana:
      image: grafana/grafana
