@@ -4,6 +4,8 @@ This project demonstrates how to use distributed tracing with Quarkus.
 
 ## Components:
 
+![Stack](images/stack.jpg)
+
 - API Gateway (Spring Cloud)
 - Discovery Service - Eureka (Spring Cloud)
 - Service A (Quarkus) that calls Service B
