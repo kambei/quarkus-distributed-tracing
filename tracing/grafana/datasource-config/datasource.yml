@@ -25,13 +25,15 @@ datasources:
     basicAuth: false
     isDefault: false
     version: 1
-    editable: true
+    editable: false
     apiVersion: 1
     uid: tempo
     jsonData:
       httpMethod: GET
       serviceMap:
         datasourceUid: 'Prometheus'
+    nodeGraph:
+      enabled: true
 
   - name: Loki
     type: loki

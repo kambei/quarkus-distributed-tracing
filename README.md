@@ -29,3 +29,6 @@ Run `docker-compose up -d` to start all containers.
 
 - Prometheus: http://localhost:19090
 - Grafana: http://localhost:13000
+
+![Tempo Node Graph](images/Schermata%20del%202023-01-30%2018-14-05.png)
+![Tempo Traces](images/Schermata%20del%202023-01-30%2018-14-15.png)
