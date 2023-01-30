@@ -2,6 +2,8 @@
 
 This project demonstrates how to use distributed tracing with Quarkus.
 
+Related to [this blog post](https://kambei.dev/blog/it/2023-01-30-this-is-quarkus/).
+
 ## Components:
 
 ![Stack](images/stack.jpg)
